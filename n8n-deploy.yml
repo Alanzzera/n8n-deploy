@@ -5,6 +5,8 @@ trigger:
 
 pool:
   name: OCI_VMS
+  demands:
+    - Agent.Name -equals vm-01  
 
 steps:
   - checkout: self
