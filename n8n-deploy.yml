@@ -5,15 +5,14 @@ trigger:
 
 pool:
   name: OCI_VMS
-  demands:
-    - Agent.Name -equals vm-01  
 
 steps:
   - checkout: self
 
   - script: |
       echo ">> Atualizando repositório local..."
-      cd /opt/n8n
+      cd /opt/n8n-deploy
+      git pull
       git fetch --all
       git reset --hard origin/main
 
