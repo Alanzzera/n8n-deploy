@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  name: OCI_VMS
+
+steps:
+  - checkout: self
+
+  - script: |
+      echo ">> Atualizando repositório local..."
+      cd /opt/n8n
+      git fetch --all
+      git reset --hard origin/main
+
+      echo ">> Atualizando imagens Docker..."
+      docker compose pull
+
+      echo ">> Recriando containers..."
+      docker compose up -d
+
+      echo ">> Limpando imagens antigas..."
+      docker image prune -f
+    displayName: "Deploy automático n8n"
