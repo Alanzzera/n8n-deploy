@@ -5,39 +5,23 @@ trigger:
 
 pool:
   name: OCI_VMS
+  demands:
+    - Agent.Name -equals vm-01
 
-jobs:
+steps:
 
-- job: Deploy_VM01
-  displayName: "Deploy na VM-01"
-  pool:
-    name: OCI_VMS
-    demands:
-      - agent.name -equals vm-01
-  steps:
-    - checkout: self
-    - script: |
-        cd /opt/n8n-deploy
-        git fetch --all
-        git reset --hard origin/main
-        docker compose pull
-        docker compose up -d
-        docker image prune -f
-      displayName: Deploy VM-01
+  - script: |
+      echo ">> Atualizando repositório local..."
+      cd /opt/n8n-deploy
+      git fetch --all
+      git reset --hard origin/main
 
-- job: Deploy_VM02
-  displayName: "Deploy na VM-02"
-  pool:
-    name: OCI_VMS
-    demands:
-      - agent.name -equals vm-02
-  steps:
-    - checkout: self
-    - script: |
-        cd /opt/n8n-deploy
-        git fetch --all
-        git reset --hard origin/main
-        docker compose pull n8n
-        docker compose up -d n8n
-        docker image prune -f
-      displayName: Deploy VM-02
+      echo ">> Atualizando imagens Docker..."
+      docker compose pull
+
+      echo ">> Subindo containers..."
+      docker compose up -d
+
+      echo ">> Limpando imagens antigas..."
+      docker image prune -f
+    displayName: "Deploy automático n8n"

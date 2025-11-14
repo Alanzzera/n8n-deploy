@@ -17,27 +17,32 @@ services:
 
   n8n:
     image: n8nio/n8n:latest
+    user: root
     restart: unless-stopped
     environment:
       - GENERIC_TIMEZONE=America/Sao_Paulo
       - TZ=America/Sao_Paulo
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=443
+      - N8N_PROTOCOL=https
+      - N8N_SSL_CERT=${N8N_SSL_CERT}
+      - N8N_SSL_KEY=${N8N_SSL_KEY}   
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false 
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_RUNNERS_ENABLED=true
-      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
-      - N8N_GIT_NODE_DISABLE_BARE_REPOS=true
-      - N8N_SECURE_COOKIE=false 
-      - OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS=true
-      - EXECUTIONS_MODE=queue
+      - N8N_GIT_NODE_DISABLE_BARE_REPOS=true      
+      - NODE_ENV=production
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=${POSTGRES_HOST}
       - DB_POSTGRESDB_PORT=${POSTGRES_PORT}
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DATABASE}
       - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
-      - QUEUE_BULL_REDIS_HOST=${REDIS_HOST}
-      - QUEUE_BULL_REDIS_PORT=${REDIS_PORT}
     ports:
-      - "5678:5678"
+      - "443:443"
+    volumes:
+      - ${CERT_VOLUMES}     
     depends_on:
       - postgres
       - redis
