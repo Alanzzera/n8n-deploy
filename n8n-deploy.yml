@@ -11,11 +11,6 @@ pool:
 steps:
 
   - script: |
-      echo ">> Atualizando repositório local..."
-      cd /home/ubuntu/n8n-deploy
-      git fetch --all
-      git reset --hard origin/main
-
       echo ">> Atualizando imagens Docker..."
       docker compose pull
 
