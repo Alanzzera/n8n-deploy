@@ -12,7 +12,7 @@ steps:
 
   - script: |
       echo ">> Atualizando repositório local..."
-      cd /opt/n8n-deploy
+      cd /home/ubuntu/n8n-deploy
       git fetch --all
       git reset --hard origin/main
 
