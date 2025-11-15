@@ -3,6 +3,9 @@ trigger:
     include:
       - main
 
+variables:
+- group: n8n-secrets
+
 pool:
   name: OCI_VMS
   demands:
@@ -11,6 +14,23 @@ pool:
 steps:
 
   - script: |
+      echo ">> Exportando variáveis para o ambiente..."
+
+      export CERT_VOLUMES="$(CERT_VOLUMES)"
+      export N8N_ENCRYPTION_KEY="$(N8N_ENCRYPTION_KEY)"
+      export N8N_HOST="$(N8N_HOST)"
+      export N8N_SSL_CERT="$(N8N_SSL_CERT)"
+      export N8N_SSL_KEY="$(N8N_SSL_KEY)"
+      export POSTGRES_HOST="$(POSTGRES_HOST)"
+      export POSTGRES_PORT="$(POSTGRES_PORT)"
+      export POSTGRES_DATABASE="$(POSTGRES_DATABASE)"
+      export POSTGRES_USER="$(POSTGRES_USER)"
+      export POSTGRES_PASSWORD="$(POSTGRES_PASSWORD)"
+      export REDIS_HOST="$(REDIS_HOST)"
+      export REDIS_PORT="$(REDIS_PORT)"
+
+      echo ">> Variáveis exportadas"
+
       echo ">> Atualizando imagens Docker..."
       docker compose pull
 
@@ -19,4 +39,5 @@ steps:
 
       echo ">> Limpando imagens antigas..."
       docker image prune -f
+
     displayName: "Deploy automático n8n"
