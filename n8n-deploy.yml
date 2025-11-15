@@ -8,42 +8,14 @@ pool:
   demands:
     - Agent.Name -equals vm-01
 
-variables:
-  - group: n8n-secrets
-
 steps:
 
-  # Gerar arquivo .env
-  - script: |
-      echo ">> Gerando .env para o docker-compose..."
-
-      cat <<EOF > .env
-N8N_ENCRYPTION_KEY=$(N8N_ENCRYPTION_KEY)
-N8N_HOST=$(N8N_HOST)
-N8N_SSL_CERT=$(N8N_SSL_CERT)
-N8N_SSL_KEY=$(N8N_SSL_KEY)
-CERT_VOLUMES=$(CERT_VOLUMES)
-
-POSTGRES_HOST=$(POSTGRES_HOST)
-POSTGRES_PORT=$(POSTGRES_PORT)
-POSTGRES_DATABASE=$(POSTGRES_DATABASE)
-POSTGRES_USER=$(POSTGRES_USER)
-POSTGRES_PASSWORD=$(POSTGRES_PASSWORD)
-
-REDIS_HOST=$(REDIS_HOST)
-REDIS_PORT=$(REDIS_PORT)
-EOF
-
-      echo ">> .env criado com sucesso!"
-    displayName: "Gerar arquivo .env"
-
-  # Docker Compose
   - script: |
       echo ">> Atualizando imagens Docker..."
       docker compose pull
 
       echo ">> Subindo containers..."
-      docker compose up -d --remove-orphans
+      docker compose up -d
 
       echo ">> Limpando imagens antigas..."
       docker image prune -f
